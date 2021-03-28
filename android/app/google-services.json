@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "363824182082",
+    "project_id": "epermanentka",
+    "storage_bucket": "epermanentka.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363824182082:android:64488df6d8c9e3888b8edb",
+        "android_client_info": {
+          "package_name": "danadelion.e_permanentka"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363824182082-fvo7agrq48qjqtrsbn23cuoggabg7u0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS3WHum0_iYkKbyiDlsRq7SCpZkVxgsvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363824182082-fvo7agrq48qjqtrsbn23cuoggabg7u0s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
