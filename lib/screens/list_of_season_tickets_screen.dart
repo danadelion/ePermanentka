@@ -1,3 +1,5 @@
+import 'package:e_permanentka/main.dart';
+import 'package:e_permanentka/screens/season_ticket_screen.dart';
 import 'package:flutter/material.dart';
 
 class ListOfSeasonTicketScreen extends StatefulWidget {
@@ -14,7 +16,7 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xFFF15124),
         title: Text(
-          'ePermanentka',
+          'nickName',
           style: TextStyle(
             fontFamily: 'Shadows',
             fontSize: 20.0,
@@ -51,6 +53,16 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               ),
               Row(
                 children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, SeasonTicketScreen.id);
+                    },
+                    child: Row(
+                      children: [
+                        Text('ePermanentka č. 1'),
+                      ],
+                    ),
+                  ),
                   // Checkbox(value: true, onChanged: )
                 ],
               ),
