@@ -1,9 +1,10 @@
+import 'package:e_permanentka/providers/google_sign_in.dart';
+import 'package:e_permanentka/screens/list_of_season_tickets_screen.dart';
+import 'package:e_permanentka/screens/log_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'login_screen.dart';
-import 'registration_screen.dart';
-import 'package:e_permanentka/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -20,6 +21,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
+
     controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
@@ -28,8 +30,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     animation = ColorTween(begin: Color(0xFFF15124), end: Colors.white)
         .animate(controller);
     controller.forward();
-    //controller.reverse (from: 1.0); zmenšuje animaci (v tom to případě zmenšuje logo)
-
     controller.addListener(() {
       setState(() {});
       print(animation.value);
@@ -47,53 +47,25 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: animation.value,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                child: Image.asset(
-                  'images/e_permanentka_transparent.png',
-                ),
-                height: 70.0,
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  'ePermanentka',
-                  style: TextStyle(
-                    fontFamily: 'Shadows',
-                    fontSize: 40.0,
-                    letterSpacing: 2.0,
-                    color: Color(0xFFF15124),
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              RoundedButton(
-                title: 'Log in',
-                color: Colors.orangeAccent,
-                onPressed: () {
-                  Navigator.pushNamed(context, LogInScreen.id);
-                },
-              ),
-              RoundedButton(
-                title: 'Register',
-                color: Colors.deepOrange,
-                onPressed: () {
-                  Navigator.pushNamed(context, RegistrationScreen.id);
-                },
-              )
-            ],
-          ),
-        ),
+      body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          final googleProvider = Provider.of<GoogleSignInProvider>(context);
+          if (googleProvider.isSigningIn) {
+            return buildLoading();
+          } else if (snapshot.hasData) {
+            return ListOfSeasonTicketScreen();
+          } else {
+            return LogInScreen();
+          }
+        },
       ),
     );
   }
+
+  Widget buildLoading() => Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 6.0,
+        ),
+      );
 }

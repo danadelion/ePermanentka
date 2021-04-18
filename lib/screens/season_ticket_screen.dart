@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:e_permanentka/checkboxListTile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+User? loggedInUser;
 
 class SeasonTicketScreen extends StatefulWidget {
   static const String id = 'season_ticket_screen';
@@ -8,35 +11,43 @@ class SeasonTicketScreen extends StatefulWidget {
 }
 
 class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
-  bool? isChecked = false;
+  final messageTextController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+
+  void initState() {
+    super.initState();
+
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        loggedInUser = user;
+        print(loggedInUser!.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    DateTime selectedDate = DateTime.now();
-
-    Future<void> _selectDate(BuildContext context) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2021),
-        lastDate: DateTime(2030),
-        helpText: 'vyber den',
-        cancelText: 'zpět',
-        confirmText: 'ok',
-        // initialEntryMode: DatePickerEntryMode.input,
-      );
-      if (picked != null && picked != selectedDate) {
-        setState(() {
-          selectedDate = picked;
-        });
-      }
-    }
-
     return Scaffold(
       backgroundColor: Color(0xFFF15124),
       appBar: AppBar(
+        leading: null,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                _auth.signOut();
+                Navigator.pop(context);
+              }),
+        ],
         title: Text(
-          'ePermanentka č.1',
+          'ePermanentka na 12 vstupů',
           style: TextStyle(
             fontFamily: 'Shadows',
             fontSize: 20.0,
@@ -57,38 +68,30 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
                   fontFamily: 'Shadows',
                 ),
               ),
+              SizedBox(
+                child: Divider(
+                  color: Colors.black,
+                ),
+                height: 25.0,
+                width: 250.0,
+              ),
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Flexible(
-                      child: CheckboxListTile(
-                        activeColor: Colors.orangeAccent,
-                        value: isChecked,
-                        selectedTileColor: Colors.red,
-                        onChanged: (newValue) {
-                          setState(() {
-                            isChecked = newValue;
-                          });
-                        },
-                        title: ElevatedButton(
-                          child: Text(
-                            DateFormat('d.M.y').format(selectedDate),
-                            style: TextStyle(color: Colors.red),
-                            textAlign: TextAlign.start,
-                          ),
-                          onPressed: () async {
-                            _selectDate(context);
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                          ),
-                        ),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(),
                   ],
                 ),
               ),
