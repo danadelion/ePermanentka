@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_permanentka/screens/login_with_email_screen.dart';
 
 class EmailSignInProvider extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -30,6 +29,7 @@ class EmailSignInProvider extends ChangeNotifier {
     user = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
     isSigningInWithEmail = false;
+    notifyListeners();
   }
 
   void register(String email, String password) async {

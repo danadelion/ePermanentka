@@ -3,6 +3,7 @@ import 'package:e_permanentka/screens/season_ticket_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ListOfSeasonTicketScreen extends StatefulWidget {
   static const String id = 'list_of_season_ticket_screen';
@@ -15,6 +16,8 @@ class ListOfSeasonTicketScreen extends StatefulWidget {
 class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
   @override
   Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
+
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -25,7 +28,6 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               title: Text('Upravit profil'),
               onTap: () {
                 // Update the state of the app.
-                // ...
               },
             ),
             ListTile(
@@ -46,6 +48,15 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
       ),
       appBar: AppBar(
         backgroundColor: Color(0xFFF15124),
+        leading: null,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                _auth.signOut();
+                Navigator.pop(context);
+              }),
+        ],
         title: Column(
           children: [
             Text(
@@ -67,13 +78,6 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            //   SizedBox(
-            //     child: Divider(
-            //       color: Colors.black,
-            //     ),
-            //     height: 25.0,
-            //     width: 250.0,
-            //   ),
           ],
         ),
       ),

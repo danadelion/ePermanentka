@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:e_permanentka/checkboxListTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+final _firestore = FirebaseFirestore.instance;
 User? loggedInUser;
 
 class SeasonTicketScreen extends StatefulWidget {
@@ -25,7 +27,6 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
       final user = _auth.currentUser;
       if (user != null) {
         loggedInUser = user;
-        print(loggedInUser!.email);
       }
     } catch (e) {
       print(e);
@@ -34,6 +35,16 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var receivedCheckboxes = [];
+    _firestore
+        .collection('checkBox')
+        // .where('user', isEqualTo: loggedInUser?.uid)
+        .orderBy('broadcasted', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      var docs = querySnapshot.docs;
+    });
+
     return Scaffold(
       backgroundColor: Color(0xFFF15124),
       appBar: AppBar(
@@ -62,7 +73,7 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
           child: Column(
             children: [
               Text(
-                'nickName',
+                'name',
                 style: TextStyle(
                   fontSize: 30.0,
                   fontFamily: 'Shadows',
@@ -77,21 +88,19 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
               ),
               Expanded(
                 child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
-                    FlexibleCheckboxListTile(),
+                    FlexibleCheckboxListTile(0),
+                    FlexibleCheckboxListTile(1),
+                    FlexibleCheckboxListTile(2),
+                    FlexibleCheckboxListTile(3),
+                    FlexibleCheckboxListTile(4),
+                    FlexibleCheckboxListTile(5),
+                    FlexibleCheckboxListTile(6),
+                    FlexibleCheckboxListTile(7),
+                    FlexibleCheckboxListTile(8),
+                    FlexibleCheckboxListTile(9),
+                    FlexibleCheckboxListTile(10),
+                    FlexibleCheckboxListTile(11),
                   ],
                 ),
               ),

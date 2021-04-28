@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+final _firestore = FirebaseFirestore.instance;
+User? loggedInUser;
+var userId = loggedInUser?.uid;
+
+// ignore: must_be_immutable
 class FlexibleCheckboxListTile extends StatefulWidget {
+  int index;
+
+  FlexibleCheckboxListTile(this.index);
+
   @override
   _FlexibleCheckboxListTileState createState() =>
       _FlexibleCheckboxListTileState();
@@ -43,6 +54,12 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
       onChanged: (newValue) {
         setState(() {
           isChecked = newValue!;
+          _firestore.collection('checkBox').add({
+            'user': userId,
+            'checkbox': isChecked,
+            'practiced': Timestamp.now(), //TODO:nemělo by tu být isChecked??
+            'broadcasted': isChecked,
+          });
         });
       },
       title: Row(

@@ -21,18 +21,20 @@ class _LoginWithEmailScreenState extends State<LogInWithEmailScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              final emailProvider = Provider.of<EmailSignInProvider>(context);
-              if (emailProvider.isSigningInWithEmail) {
-                return buildLoading();
-              } else if (snapshot.hasData) {
-                return ListOfSeasonTicketScreen();
-              } else {
-                return SignInWithEmailForm();
-              }
-            },
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                final emailProvider = Provider.of<EmailSignInProvider>(context);
+                if (emailProvider.isSigningInWithEmail) {
+                  return buildLoading();
+                } else if (snapshot.hasData) {
+                  return ListOfSeasonTicketScreen();
+                } else {
+                  return SignInWithEmailForm();
+                }
+              },
+            ),
           ),
         ],
       ),

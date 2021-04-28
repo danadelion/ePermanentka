@@ -31,7 +31,7 @@ class RegistrationWithEmail extends StatelessWidget {
               name = value;
             },
             decoration: kTextFieldDecoration.copyWith(
-              hintText: 'zadej jméno/přezdívku',
+              hintText: 'zadej jméno',
             ),
           ),
           SizedBox(
