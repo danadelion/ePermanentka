@@ -31,7 +31,7 @@ class _LoginWithEmailScreenState extends State<LogInWithEmailScreen> {
                 } else if (snapshot.hasData) {
                   return ListOfSeasonTicketScreen();
                 } else {
-                  return SignInWithEmailForm();
+                  return SignInWithEmailForm(emailProvider.errorMessage);
                 }
               },
             ),

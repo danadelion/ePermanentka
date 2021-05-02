@@ -6,10 +6,13 @@ import '../constants.dart';
 import 'rounded_button.dart';
 
 class SignInWithEmailForm extends StatelessWidget {
+  final String errorMessage;
+  SignInWithEmailForm(this.errorMessage);
+
   @override
   Widget build(BuildContext context) {
-    late String email;
-    late String password;
+    late String email = '';
+    late String password = '';
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -21,6 +24,26 @@ class SignInWithEmailForm extends StatelessWidget {
             height: 200.0,
             child: Image.asset('images/e_permanentka_transparent.png'),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                errorMessage != '' ? Icons.warning_amber_rounded : null,
+                color: Color(0xFFF15124),
+                size: 30.0,
+              ),
+              Text(
+                errorMessage,
+                style: TextStyle(
+                  fontFamily: 'Shadows',
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFF15124),
+                  fontSize: 19.0,
+                ),
+              ),
+            ],
+          ),
           SizedBox(
             height: 48.0,
           ),
@@ -28,13 +51,16 @@ class SignInWithEmailForm extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Shadows',
               letterSpacing: 2.0,
+              fontWeight: FontWeight.w700,
             ),
             onChanged: (value) {
               email = value;
             },
             keyboardType: TextInputType.emailAddress,
             decoration: kTextFieldDecoration.copyWith(
-              hintText: 'Enter your email',
+              hintText: 'zadej email',
+              labelText: 'Emailová adresa',
+              labelStyle: TextStyle(color: Colors.red),
             ),
           ),
           SizedBox(
@@ -44,13 +70,16 @@ class SignInWithEmailForm extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Shadows',
               letterSpacing: 2.0,
+              fontWeight: FontWeight.w700,
             ),
             obscureText: true,
             onChanged: (value) {
               password = value;
             },
             decoration: kTextFieldDecoration.copyWith(
-              hintText: 'Enter your password',
+              hintText: 'zadej heslo',
+              labelText: 'Heslo',
+              labelStyle: TextStyle(color: Colors.red),
             ),
           ),
           SizedBox(

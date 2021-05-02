@@ -15,6 +15,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String name;
   late String password;
   bool showSpinner = false;
+  // final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
+
+  late TextEditingController nameInputController;
+  late TextEditingController emailInputController;
+  late TextEditingController pwdInputController;
+  late TextEditingController confirmPwdInputController;
+
+  @override
+  initState() {
+    nameInputController = new TextEditingController();
+    emailInputController = new TextEditingController();
+    pwdInputController = new TextEditingController();
+    confirmPwdInputController = new TextEditingController();
+    super.initState();
+  }
+
+  String? emailValidator(String value) {
+    var pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Nesporávný formát emailu';
+    } else {
+      return null;
+    }
+  }
+
+  String? pwdValidator(String value) {
+    if (value.length < 6) {
+      return 'Helo musí mít minimálně 6 znaků';
+    } else {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

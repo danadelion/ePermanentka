@@ -4,10 +4,10 @@ import 'package:e_permanentka/checkboxListTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _firestore = FirebaseFirestore.instance;
-User? loggedInUser;
 
 class SeasonTicketScreen extends StatefulWidget {
   static const String id = 'season_ticket_screen';
+
   @override
   _SeasonTicketScreenState createState() => _SeasonTicketScreenState();
 }
@@ -15,6 +15,9 @@ class SeasonTicketScreen extends StatefulWidget {
 class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  var receivedCheckboxes = [];
+  bool isLoading = true;
+  User? loggedInUser;
 
   void initState() {
     super.initState();
@@ -22,7 +25,7 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
     getCurrentUser();
   }
 
-  void getCurrentUser() async {
+  Future<void> getCurrentUser() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
@@ -33,30 +36,56 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
     }
   }
 
+  Map<String, dynamic>? getCheckBoxData(int index, List receivedCheckboxes) {
+    if (receivedCheckboxes.isEmpty) {
+      return null;
+    }
+    try {
+      QueryDocumentSnapshot? doc = receivedCheckboxes.firstWhere(
+        (var element) {
+          return element.exists && element['index'] == index;
+        },
+      );
+      return doc!.data();
+    } on StateError catch (e) {
+      return null;
+    }
+  }
+  //
+  // Future<void> updateCheckBoxData(Map<String, dynamic> data) async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   return await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user!.uid)
+  //       .update(data);
+  // }
+
   @override
   Widget build(BuildContext context) {
-    var receivedCheckboxes = [];
-    _firestore
-        .collection('checkBox')
-        // .where('user', isEqualTo: loggedInUser?.uid)
-        .orderBy('broadcasted', descending: true)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      var docs = querySnapshot.docs;
-    });
+    if (isLoading) {
+      getCurrentUser().then((value) {
+        _firestore
+            .collection('users')
+            .doc(loggedInUser!.uid)
+            .collection('checkBox')
+            //.collection('checkBox')
+            //.where('user', isEqualTo: loggedInUser?.uid)
+            .orderBy('broadcasted', descending: true)
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          setState(() {
+            receivedCheckboxes = querySnapshot.docs;
+            isLoading = false;
+          });
+        });
+      });
+      return buildLoading();
+    }
 
     return Scaffold(
       backgroundColor: Color(0xFFF15124),
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.pop(context);
-              }),
-        ],
         title: Text(
           'ePermanentka na 12 vstupů',
           style: TextStyle(
@@ -73,7 +102,7 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
           child: Column(
             children: [
               Text(
-                'name',
+                loggedInUser?.email ?? 'unknown',
                 style: TextStyle(
                   fontSize: 30.0,
                   fontFamily: 'Shadows',
@@ -89,18 +118,30 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
               Expanded(
                 child: ListView(
                   children: [
-                    FlexibleCheckboxListTile(0),
-                    FlexibleCheckboxListTile(1),
-                    FlexibleCheckboxListTile(2),
-                    FlexibleCheckboxListTile(3),
-                    FlexibleCheckboxListTile(4),
-                    FlexibleCheckboxListTile(5),
-                    FlexibleCheckboxListTile(6),
-                    FlexibleCheckboxListTile(7),
-                    FlexibleCheckboxListTile(8),
-                    FlexibleCheckboxListTile(9),
-                    FlexibleCheckboxListTile(10),
-                    FlexibleCheckboxListTile(11),
+                    FlexibleCheckboxListTile(
+                        0, getCheckBoxData(0, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        1, getCheckBoxData(1, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        2, getCheckBoxData(2, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        3, getCheckBoxData(3, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        4, getCheckBoxData(4, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        5, getCheckBoxData(5, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        6, getCheckBoxData(6, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        7, getCheckBoxData(7, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        8, getCheckBoxData(8, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        9, getCheckBoxData(9, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        10, getCheckBoxData(10, receivedCheckboxes)),
+                    FlexibleCheckboxListTile(
+                        11, getCheckBoxData(11, receivedCheckboxes)),
                   ],
                 ),
               ),
@@ -110,4 +151,10 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
       ),
     );
   }
+
+  Widget buildLoading() => Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 6.0,
+        ),
+      );
 }

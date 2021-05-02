@@ -4,14 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _firestore = FirebaseFirestore.instance;
-User? loggedInUser;
-var userId = loggedInUser?.uid;
 
 // ignore: must_be_immutable
 class FlexibleCheckboxListTile extends StatefulWidget {
   int index;
+  Map? checkboxData;
 
-  FlexibleCheckboxListTile(this.index);
+  FlexibleCheckboxListTile(this.index, this.checkboxData);
 
   @override
   _FlexibleCheckboxListTileState createState() =>
@@ -20,6 +19,8 @@ class FlexibleCheckboxListTile extends StatefulWidget {
 
 class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
   DateTime selectedDate = DateTime.now();
+  final _auth = FirebaseAuth.instance;
+  User? loggedInUser;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -44,6 +45,13 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
   @override
   Widget build(BuildContext context) {
     DateTime date = DateTime.now();
+    User? loggedInUser = _auth.currentUser;
+    var userId = loggedInUser?.uid;
+    var checkboxData = widget.checkboxData;
+
+    if (checkboxData != null) {
+      isChecked = checkboxData['checkbox'];
+    }
 
     return CheckboxListTile(
       activeColor: Colors.white,
@@ -54,10 +62,15 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
       onChanged: (newValue) {
         setState(() {
           isChecked = newValue!;
-          _firestore.collection('checkBox').add({
-            'user': userId,
+          _firestore
+              .collection('users')
+              .doc(userId!)
+              .collection('checkBox')
+              .add({
+            'index': widget.index,
+            'user': loggedInUser?.uid,
             'checkbox': isChecked,
-            'practiced': Timestamp.now(), //TODO:nemělo by tu být isChecked??
+            'practiced': Timestamp.now(),
             'broadcasted': isChecked,
           });
         });

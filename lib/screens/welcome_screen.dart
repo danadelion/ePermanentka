@@ -47,18 +47,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: animation.value,
-      body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          final googleProvider = Provider.of<GoogleSignInProvider>(context);
-          if (googleProvider.isSigningIn) {
-            return buildLoading();
-          } else if (snapshot.hasData) {
-            return ListOfSeasonTicketScreen();
-          } else {
-            return LogInScreen();
-          }
-        },
+      body: Center(
+        child: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            final googleProvider = Provider.of<GoogleSignInProvider>(context);
+            if (googleProvider.isSigningIn) {
+              return buildLoading();
+            } else if (snapshot.hasData) {
+              return ListOfSeasonTicketScreen();
+            } else {
+              return LogInScreen();
+            }
+          },
+        ),
       ),
     );
   }
