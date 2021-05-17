@@ -1,16 +1,18 @@
+import 'package:e_permanentka/repositories/checkbox_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'value_objects/checkbox_value_object.dart';
 
 final _firestore = FirebaseFirestore.instance;
+final _checkboxRepository = CheckBoxRepository();
 
 // ignore: must_be_immutable
 class FlexibleCheckboxListTile extends StatefulWidget {
-  int index;
-  Map? checkboxData;
+  CheckBoxValueObject checkboxValueObject;
 
-  FlexibleCheckboxListTile(this.index, this.checkboxData);
+  FlexibleCheckboxListTile(this.checkboxValueObject);
 
   @override
   _FlexibleCheckboxListTileState createState() =>
@@ -22,7 +24,8 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
   final _auth = FirebaseAuth.instance;
   User? loggedInUser;
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(
+      BuildContext context, CheckBoxValueObject checkboxValueObject) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -36,22 +39,37 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+
+        checkboxValueObject.practiced = DateTime.now();
+        checkboxValueObject.broadcasted = selectedDate;
+
+        _checkboxRepository.save(checkboxValueObject);
+
+        // _firestore
+        //     .collection('users')
+        //     .doc(userId)
+        //     .collection('checkBox')
+        //     .doc(checkboxData!.index.toString())
+        //     .update({
+        //   // 'index': widget.index,
+        //   // 'checkbox': isChecked,
+        //   // 'practiced': Timestamp.now(),
+        //   "broadcasted": selectedDate,
+        // });
       });
     }
   }
 
-  bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
-    DateTime date = DateTime.now();
-    User? loggedInUser = _auth.currentUser;
-    var userId = loggedInUser?.uid;
-    var checkboxData = widget.checkboxData;
-
-    if (checkboxData != null) {
-      isChecked = checkboxData['checkbox'];
-    }
+    CheckBoxValueObject checkboxValueObject = widget.checkboxValueObject;
+    selectedDate = (checkboxValueObject.broadcasted != null
+        ? checkboxValueObject.broadcasted
+        : DateTime.now())!;
+    DateTime date = (checkboxValueObject.practiced != null
+        ? checkboxValueObject.practiced
+        : DateTime.now())!;
+    bool isChecked = checkboxValueObject.checkbox;
 
     return CheckboxListTile(
       activeColor: Colors.white,
@@ -59,20 +77,11 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
       value: isChecked,
       selectedTileColor: Colors.white,
       checkColor: Colors.red,
-      onChanged: (newValue) {
+      onChanged: (newValue) async {
+        checkboxValueObject.checkbox = newValue!;
+        await _checkboxRepository.save(checkboxValueObject);
         setState(() {
-          isChecked = newValue!;
-          _firestore
-              .collection('users')
-              .doc(userId!)
-              .collection('checkBox')
-              .add({
-            'index': widget.index,
-            'user': loggedInUser?.uid,
-            'checkbox': isChecked,
-            'practiced': Timestamp.now(),
-            'broadcasted': isChecked,
-          });
+          isChecked = newValue;
         });
       },
       title: Row(
@@ -114,8 +123,21 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
                 ),
                 textAlign: TextAlign.start,
               ),
-              onPressed: () async {
-                _selectDate(context);
+              onPressed: () {
+                setState(() {
+                  _selectDate(context, checkboxValueObject);
+                  // _firestore
+                  //     .collection('users')
+                  //     .doc(userId)
+                  //     .collection('checkBox')
+                  //     .doc(checkboxValueObject.id)
+                  //     .update({
+                  //   // 'index': widget.index,
+                  //   // 'checkbox': isChecked,
+                  //   // 'practiced': Timestamp.now(),
+                  //   "broadcasted": selectedDate,
+                  // });
+                });
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),

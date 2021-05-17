@@ -1,5 +1,5 @@
 import 'package:e_permanentka/providers/email_sign_in.dart';
-import 'package:e_permanentka/screens/season_ticket_screen.dart';
+import 'package:e_permanentka/widgets/text_button_ePermanentka.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/google_sign_in.dart';
@@ -16,6 +16,7 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
   @override
   Widget build(BuildContext context) {
     // final _auth = FirebaseAuth.instance;
+    // User? loggedInUser = _auth.currentUser;
 
     return Scaffold(
       drawer: Drawer(
@@ -32,6 +33,10 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
             ListTile(
               title: Text('Změna hesla'),
               onTap: () {
+                // FirebaseFirestore.instance
+                //     .collection('users')
+                //     .doc(loggedInUser!.uid)
+                //     .get(name);
                 // Update the state of the app.
               },
             ),
@@ -90,33 +95,7 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
                     height: 20.0,
                   ),
                   Column(
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, SeasonTicketScreen.id);
-                        },
-                        child: Text(
-                          '  ePermanentka 12 vstupů   ',
-                          style: TextStyle(
-                            fontFamily: 'Shadows',
-                            fontSize: 15.0,
-                            color: Color(0xFFF15124),
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 3.0,
-                          ),
-                        ),
-                      ),
-                    ],
+                    children: [TextButtonEPermanentka()],
                   ),
                 ],
               ),

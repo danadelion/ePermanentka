@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:e_permanentka/checkboxListTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -36,9 +37,14 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
     }
   }
 
-  Map<String, dynamic>? getCheckBoxData(int index, List receivedCheckboxes) {
+  CheckBoxValueObject getCheckBoxData(int index, List receivedCheckboxes) {
+    CheckBoxValueObject emptyObject = CheckBoxValueObject({
+      'index': index,
+      'user': loggedInUser!.uid,
+    });
+
     if (receivedCheckboxes.isEmpty) {
-      return null;
+      return emptyObject;
     }
     try {
       QueryDocumentSnapshot? doc = receivedCheckboxes.firstWhere(
@@ -46,14 +52,15 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
           return element.exists && element['index'] == index;
         },
       );
-      return doc!.data();
-    } on StateError catch (e) {
-      return null;
+      return CheckBoxValueObject(doc!.data()!, id: doc.id);
+    } catch (e) {
+      return emptyObject;
     }
   }
+
   //
   // Future<void> updateCheckBoxData(Map<String, dynamic> data) async {
-  //   final user = FirebaseAuth.instance.currentUser;
+  // final userName = FirebaseAuth.instance.currentUser!.displayName;
   //   return await FirebaseFirestore.instance
   //       .collection('users')
   //       .doc(user!.uid)
@@ -68,15 +75,19 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
             .collection('users')
             .doc(loggedInUser!.uid)
             .collection('checkBox')
-            //.collection('checkBox')
-            //.where('user', isEqualTo: loggedInUser?.uid)
-            .orderBy('broadcasted', descending: true)
+            //.orderBy('broadcasted', descending: true)
             .get()
-            .then((QuerySnapshot querySnapshot) {
-          setState(() {
-            receivedCheckboxes = querySnapshot.docs;
-            isLoading = false;
-          });
+            .then(
+          (QuerySnapshot querySnapshot) {
+            setState(
+              () {
+                receivedCheckboxes = querySnapshot.docs;
+                isLoading = false;
+              },
+            );
+          },
+        ).onError((error, stackTrace) {
+          print(error.toString());
         });
       });
       return buildLoading();
@@ -119,29 +130,29 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
                 child: ListView(
                   children: [
                     FlexibleCheckboxListTile(
-                        0, getCheckBoxData(0, receivedCheckboxes)),
+                        getCheckBoxData(0, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        1, getCheckBoxData(1, receivedCheckboxes)),
+                        getCheckBoxData(1, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        2, getCheckBoxData(2, receivedCheckboxes)),
+                        getCheckBoxData(2, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        3, getCheckBoxData(3, receivedCheckboxes)),
+                        getCheckBoxData(3, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        4, getCheckBoxData(4, receivedCheckboxes)),
+                        getCheckBoxData(4, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        5, getCheckBoxData(5, receivedCheckboxes)),
+                        getCheckBoxData(5, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        6, getCheckBoxData(6, receivedCheckboxes)),
+                        getCheckBoxData(6, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        7, getCheckBoxData(7, receivedCheckboxes)),
+                        getCheckBoxData(7, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        8, getCheckBoxData(8, receivedCheckboxes)),
+                        getCheckBoxData(8, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        9, getCheckBoxData(9, receivedCheckboxes)),
+                        getCheckBoxData(9, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        10, getCheckBoxData(10, receivedCheckboxes)),
+                        getCheckBoxData(10, receivedCheckboxes)),
                     FlexibleCheckboxListTile(
-                        11, getCheckBoxData(11, receivedCheckboxes)),
+                        getCheckBoxData(11, receivedCheckboxes)),
                   ],
                 ),
               ),

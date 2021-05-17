@@ -168,15 +168,3 @@ class RegistrationWithEmail extends StatelessWidget {
     );
   }
 }
-
-//
-// void inputData() {
-//   final User user = auth.currentUser!;
-//   final uid = user.uid;
-//   // here you write the codes to input the data into firestore
-//   FirebaseFirestore.instance.collection('users').doc(user!.uid).setData({
-//     "uid": user!.uid,
-//     "firstName": name,
-//     "email": email,
-//     "password": password,
-//   });}
