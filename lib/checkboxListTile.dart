@@ -1,12 +1,15 @@
 import 'package:e_permanentka/repositories/checkbox_repository.dart';
+import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'value_objects/checkbox_value_object.dart';
+import 'package:e_permanentka/repositories/ePermanentka_repository.dart';
 
-final _firestore = FirebaseFirestore.instance;
+// final _firestore = FirebaseFirestore.instance;
 final _checkboxRepository = CheckBoxRepository();
+late final EPermanentkaValueObject ePermanentkaValueObject;
 
 // ignore: must_be_immutable
 class FlexibleCheckboxListTile extends StatefulWidget {
@@ -21,7 +24,7 @@ class FlexibleCheckboxListTile extends StatefulWidget {
 
 class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
   DateTime selectedDate = DateTime.now();
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
   User? loggedInUser;
 
   Future<void> _selectDate(
@@ -44,18 +47,6 @@ class _FlexibleCheckboxListTileState extends State<FlexibleCheckboxListTile> {
         checkboxValueObject.broadcasted = selectedDate;
 
         _checkboxRepository.save(checkboxValueObject);
-
-        // _firestore
-        //     .collection('users')
-        //     .doc(userId)
-        //     .collection('checkBox')
-        //     .doc(checkboxData!.index.toString())
-        //     .update({
-        //   // 'index': widget.index,
-        //   // 'checkbox': isChecked,
-        //   // 'practiced': Timestamp.now(),
-        //   "broadcasted": selectedDate,
-        // });
       });
     }
   }

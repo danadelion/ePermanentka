@@ -1,7 +1,14 @@
 import 'package:e_permanentka/screens/season_ticket_screen.dart';
+import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
+import 'package:e_permanentka/value_objects/season_ticket_screen_arguments.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TextButtonEPermanentka extends StatefulWidget {
+  EPermanentkaValueObject ePermanentkaValueObject;
+
+  TextButtonEPermanentka(this.ePermanentkaValueObject);
+
   @override
   _TextButtonEPermanentkaState createState() => _TextButtonEPermanentkaState();
 }
@@ -20,7 +27,9 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
         ),
       ),
       onPressed: () {
-        Navigator.pushNamed(context, SeasonTicketScreen.id);
+        Navigator.pushNamed(context, SeasonTicketScreen.id,
+            arguments:
+                SeasonTicketScreenArguments(widget.ePermanentkaValueObject));
       },
       child: Text(
         '  ePermanentka 12 vstupů   ',

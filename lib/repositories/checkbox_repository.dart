@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
+import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 
 class CheckBoxRepository {
   final _firestore = FirebaseFirestore.instance;
@@ -20,8 +21,8 @@ class CheckBoxRepository {
     DocumentReference doc = await _firestore
         .collection('users')
         .doc(checkBoxValueObject.userId)
-        // .collection('ePermanentka')
-        // .doc(checkBoxValueObject.userId)
+        .collection('ePermanentka')
+        .doc(checkBoxValueObject.ePermanentkaValueObject.id)
         .collection('checkBox')
         .add(checkBoxValueObject.toMap());
 
@@ -35,6 +36,8 @@ class CheckBoxRepository {
     await _firestore
         .collection('users')
         .doc(checkBoxValueObject.userId)
+        .collection('ePermanentka')
+        .doc(checkBoxValueObject.ePermanentkaValueObject.id)
         .collection('checkBox')
         .doc(checkBoxValueObject.id)
         .update(checkBoxValueObject.toMap());
@@ -44,8 +47,6 @@ class CheckBoxRepository {
 
   List<CheckBoxValueObject> getAllForUser(String userId) {
     List<CheckBoxValueObject> checkboxValueObjects = [];
-
-    // @todo
 
     return checkboxValueObjects;
   }

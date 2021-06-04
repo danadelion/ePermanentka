@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
+import 'package:e_permanentka/value_objects/season_ticket_screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:e_permanentka/checkboxListTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,8 +39,12 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
     }
   }
 
-  CheckBoxValueObject getCheckBoxData(int index, List receivedCheckboxes) {
-    CheckBoxValueObject emptyObject = CheckBoxValueObject({
+  CheckBoxValueObject getCheckBoxData(
+      EPermanentkaValueObject ePermanentkaValueObject,
+      int index,
+      List receivedCheckboxes) {
+    CheckBoxValueObject emptyObject =
+        CheckBoxValueObject(ePermanentkaValueObject, {
       'index': index,
       'user': loggedInUser!.uid,
     });
@@ -52,30 +58,30 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
           return element.exists && element['index'] == index;
         },
       );
-      return CheckBoxValueObject(doc!.data()!, id: doc.id);
+      return CheckBoxValueObject(ePermanentkaValueObject, doc!.data()!,
+          id: doc.id);
     } catch (e) {
       return emptyObject;
     }
   }
 
-  //
-  // Future<void> updateCheckBoxData(Map<String, dynamic> data) async {
-  // final userName = FirebaseAuth.instance.currentUser!.displayName;
-  //   return await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(user!.uid)
-  //       .update(data);
-  // }
-
   @override
   Widget build(BuildContext context) {
+    final SeasonTicketScreenArguments seasonTicketScreenArguments =
+        ModalRoute.of(context)!.settings.arguments
+            as SeasonTicketScreenArguments;
+
+    EPermanentkaValueObject ePermanetkaValueObject =
+        seasonTicketScreenArguments.ePermanentkaValueObject;
+
     if (isLoading) {
       getCurrentUser().then((value) {
         _firestore
             .collection('users')
             .doc(loggedInUser!.uid)
+            .collection('ePermanentka')
+            .doc(ePermanetkaValueObject.id)
             .collection('checkBox')
-            //.orderBy('broadcasted', descending: true)
             .get()
             .then(
           (QuerySnapshot querySnapshot) {
@@ -91,6 +97,18 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
         });
       });
       return buildLoading();
+    }
+
+    List<FlexibleCheckboxListTile> generateFlexibleCheckboxListTiles(
+        List receivedCheckboxes,
+        EPermanentkaValueObject ePermanetkaValueObject) {
+      List<FlexibleCheckboxListTile> flexibleCheckboxListTiles = [];
+      for (int index = 0; index < 12; index++) {
+        flexibleCheckboxListTiles.add(FlexibleCheckboxListTile(getCheckBoxData(
+            ePermanetkaValueObject, index, receivedCheckboxes)));
+      }
+
+      return flexibleCheckboxListTiles;
     }
 
     return Scaffold(
@@ -128,32 +146,8 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
               ),
               Expanded(
                 child: ListView(
-                  children: [
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(0, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(1, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(2, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(3, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(4, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(5, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(6, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(7, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(8, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(9, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(10, receivedCheckboxes)),
-                    FlexibleCheckboxListTile(
-                        getCheckBoxData(11, receivedCheckboxes)),
-                  ],
+                  children: generateFlexibleCheckboxListTiles(
+                      receivedCheckboxes, ePermanetkaValueObject),
                 ),
               ),
             ],
