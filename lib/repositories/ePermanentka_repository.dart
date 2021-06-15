@@ -12,6 +12,7 @@ class EPermanentkaRepository {
     EPermanentkaValueObject emptyObject = EPermanentkaValueObject({
       'index': index,
       'user': loggedInUser!.uid,
+      'email': loggedInUser!.email,
     });
 
     if (receivedEPermanentka.isEmpty) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:e_permanentka/checkboxListTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
+import 'package:e_permanentka/constants.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -89,6 +90,7 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
               () {
                 receivedCheckboxes = querySnapshot.docs;
                 isLoading = false;
+                // receivedCheckboxes.length;
               },
             );
           },
@@ -103,6 +105,7 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
         List receivedCheckboxes,
         EPermanentkaValueObject ePermanetkaValueObject) {
       List<FlexibleCheckboxListTile> flexibleCheckboxListTiles = [];
+
       for (int index = 0; index < 12; index++) {
         flexibleCheckboxListTiles.add(FlexibleCheckboxListTile(getCheckBoxData(
             ePermanetkaValueObject, index, receivedCheckboxes)));
@@ -111,18 +114,15 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
       return flexibleCheckboxListTiles;
     }
 
+    int numberOfReceivedCheckboxes = receivedCheckboxes.length;
+
     return Scaffold(
       backgroundColor: Color(0xFFF15124),
       appBar: AppBar(
         leading: null,
         title: Text(
-          'ePermanentka na 12 vstupů',
-          style: TextStyle(
-            fontFamily: 'Shadows',
-            fontSize: 20.0,
-            letterSpacing: 2.5,
-            fontWeight: FontWeight.w700,
-          ),
+          loggedInUser?.displayName ?? 'unknown',
+          style: kFontStyleWhiteSize20,
         ),
         backgroundColor: Color(0xFFF15124),
       ),
@@ -130,12 +130,25 @@ class _SeasonTicketScreenState extends State<SeasonTicketScreen> {
         child: Container(
           child: Column(
             children: [
-              Text(
-                loggedInUser?.email ?? 'unknown',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontFamily: 'Shadows',
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'zbývá ',
+                    style: kFontStyleWhite,
+                  ),
+                  Text(
+                    '${12 - numberOfReceivedCheckboxes}',
+                    style: kFontStyleBlackSize20,
+                  ),
+                  Text(
+                    'z 12 vstupů',
+                    style: kFontStyleWhite,
+                  ),
+                  // SizedBox(
+                  //   width: 5.0,
+                  // )
+                ],
               ),
               SizedBox(
                 child: Divider(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_permanentka/constants.dart';
 import 'package:e_permanentka/providers/email_sign_in.dart';
-import 'package:e_permanentka/repositories/ePermanentka_repository.dart';
+import 'package:e_permanentka/screens/password_update_screen.dart';
 import 'package:e_permanentka/screens/payment_screen.dart';
 import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 import 'package:e_permanentka/widgets/text_button_ePermanentka.dart';
@@ -20,8 +21,6 @@ class ListOfSeasonTicketScreen extends StatefulWidget {
 }
 
 class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
-  final EPermanentkaRepository _ePermanentkaRepository =
-      EPermanentkaRepository();
   var receivedPermanentky = [];
   bool isLoading = true;
   User? loggedInUser;
@@ -65,15 +64,28 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
       return buildLoading();
     }
 
+    // var receivedCheckboxes = [];
+    // int numberOfReceivedCheckboxes = receivedCheckboxes.length;
+
     return Scaffold(
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(child: Text('A')),
+            DrawerHeader(
+                child: Column(
+              children: [
+                Text(loggedInUser!.displayName.toString(),
+                    style: kFontStyleBlack),
+              ],
+            )),
             ListTile(
-              title: Text('Upravit profil'),
+              title: Text(
+                'Upravit profil',
+                style: kFontStyleBlack,
+              ),
               onTap: () {
+                Navigator.pushNamed(context, PasswordUpdateScreen.id);
                 // FirebaseFirestore.instance
                 //     .collection('users')
                 //     .doc(loggedInUser!.uid)
@@ -81,7 +93,23 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               },
             ),
             ListTile(
-              title: Text('Změna hesla'),
+              title: Text(
+                'Změnit heslo',
+                style: kFontStyleBlack,
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, PasswordUpdateScreen.id);
+                // FirebaseFirestore.instance
+                //     .collection('users')
+                //     .doc(loggedInUser!.uid)
+                //     .get(name);
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Změna hesla',
+                style: kFontStyleBlack,
+              ),
               onTap: () {
                 // FirebaseFirestore.instance
                 //     .collection('users')
@@ -91,7 +119,7 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               },
             ),
             ListTile(
-              title: Text('Odhlásit se'),
+              title: Text('Odhlásit se', style: kFontStyleBlack),
               onTap: () async {
                 final googleProvider = context.read<GoogleSignInProvider>();
                 final emailProvider = context.read<EmailSignInProvider>();
@@ -112,22 +140,12 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
         title: Column(
           children: [
             Text(
-              loggedInUser?.email ?? 'unknown',
-              style: TextStyle(
-                fontFamily: 'Shadows',
-                fontSize: 20.0,
-                letterSpacing: 2.5,
-                fontWeight: FontWeight.w700,
-              ),
+              loggedInUser.displayName ?? 'unknown',
+              style: kFontStyleWhiteSize20,
             ),
             Text(
               'seznam ePermanentek',
-              style: TextStyle(
-                fontFamily: 'Shadows',
-                fontSize: 20.0,
-                letterSpacing: 3.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: kFontStyleWhiteSize20,
               textAlign: TextAlign.center,
             ),
           ],
@@ -153,12 +171,7 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
                           ? Text(
                               'nemáte žádnou permanentku!!',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Shadows',
-                                fontSize: 20.0,
-                                letterSpacing: 3.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: kFontStyleBlackSize20,
                             )
                           : Column(
                               children: receivedPermanentky.map((doc) {

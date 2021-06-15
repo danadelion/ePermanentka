@@ -36,7 +36,7 @@ class RegistrationWithEmail extends StatelessWidget {
                   ),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
-                      return 'zadej jméno nebo přezdívku';
+                      return 'zadej jméno a příjmení';
                     }
                     return null;
                   },
@@ -44,8 +44,8 @@ class RegistrationWithEmail extends StatelessWidget {
                     name = value;
                   },
                   decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'zadej jméno',
-                    labelText: 'Jméno/přezdívka',
+                    hintText: 'zadej jméno a příjmení',
+                    labelText: 'Jméno a příjmení',
                     labelStyle: TextStyle(color: Colors.red),
                   ),
                 ),

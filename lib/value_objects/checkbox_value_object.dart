@@ -16,11 +16,11 @@ class CheckBoxValueObject {
     this.index = data['index'];
     this.broadcasted = data.containsKey('broadcasted')
         ? DateTime.parse(data['broadcasted'])
-        : null;
+        : DateTime.now();
     this.checkbox = data.containsKey('checkbox') ? data['checkbox'] : false;
     this.practiced = data.containsKey('practiced')
         ? DateTime.parse(data['practiced'])
-        : null;
+        : DateTime.now();
     this.ePermanentkaValueObject = ePermanentkaValueObject;
   }
 
@@ -30,6 +30,7 @@ class CheckBoxValueObject {
       'user': userId,
       'checkbox': checkbox,
       'practiced': practiced,
+      'broadcasted': broadcasted,
     };
 
     if (practiced != null) {

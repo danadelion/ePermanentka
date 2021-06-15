@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
-import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 
 class CheckBoxRepository {
   final _firestore = FirebaseFirestore.instance;

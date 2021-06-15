@@ -19,3 +19,45 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kFontStyleBlack = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Shadows',
+  letterSpacing: 2,
+  fontWeight: FontWeight.w800,
+);
+
+const kFontStyleBlackSize20 = TextStyle(
+  fontFamily: 'Shadows',
+  fontSize: 20.0,
+  letterSpacing: 3.0,
+  fontWeight: FontWeight.w700,
+);
+
+const kFontStyleBlackSize30 = TextStyle(
+  fontFamily: 'Shadows',
+  fontSize: 30.0,
+  letterSpacing: 3.0,
+  fontWeight: FontWeight.w700,
+);
+
+const kFontStyleWhite = TextStyle(
+  fontFamily: 'Shadows',
+  color: Colors.white,
+  letterSpacing: 3.0,
+  fontWeight: FontWeight.w700,
+);
+
+const kFontStyleWhiteSize20 = TextStyle(
+  fontFamily: 'Shadows',
+  color: Colors.white,
+  fontSize: 20.0,
+  letterSpacing: 3.0,
+  fontWeight: FontWeight.w700,
+);
+
+const kFontStyleRed = TextStyle(
+  color: Colors.red,
+  fontFamily: 'Shadows',
+  letterSpacing: 2,
+);

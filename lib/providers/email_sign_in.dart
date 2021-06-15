@@ -8,12 +8,7 @@ class EmailSignInProvider extends ChangeNotifier {
   late String password;
   late UserCredential? user;
   late String _errorMessage = '';
-
-  void inputData() {
-    final User user = _auth.currentUser!;
-    final uid = user.uid;
-    print(uid);
-  }
+  late String name;
 
   bool showSpinner = false;
   bool _isSigningInWithEmail = false;
@@ -67,25 +62,25 @@ class EmailSignInProvider extends ChangeNotifier {
     try {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then(
-            (currentUser) => FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.user!.uid)
-                .set(
-              {
-                'uid': currentUser.user!.uid,
-                'name': name,
-              },
-            ),
-          );
-      // await _auth.createUserWithEmailAndPassword(
-      //     email: email, password: password);
-      User newUser = (await _auth.createUserWithEmailAndPassword(
-          email: email, password: password)) as User;
-      await newUser.sendEmailVerification();
+          .then((currentUser) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.user!.uid)
+            .set(
+          {
+            'uid': currentUser.user!.uid,
+            'name': name,
+            'email': email,
+          },
+        );
+      });
+      String displayName = await FirebaseAuth.instance.currentUser!
+          .updateProfile(displayName: name) as String;
+      name = displayName;
     } catch (e) {
       print(e);
     }
+
     isRegisteringWithEmail = false;
   }
 

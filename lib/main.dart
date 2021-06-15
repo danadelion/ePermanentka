@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:e_permanentka/providers/email_sign_in.dart';
 import 'screens/payment_screen.dart';
+import 'screens/password_update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,7 @@ class EPermanentka extends StatelessWidget {
       ListOfSeasonTicketScreen.id: (context) => ListOfSeasonTicketScreen(),
       LogInScreen.id: (context) => LogInScreen(),
       PaymentScreen.id: (context) => PaymentScreen(),
+      PasswordUpdateScreen.id: (context) => PasswordUpdateScreen(),
     });
   }
 }

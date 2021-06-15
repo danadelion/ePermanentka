@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:e_permanentka/providers/email_sign_in.dart';
-import 'package:e_permanentka/widgets/registration_with_email.dart';
+import 'package:e_permanentka/widgets/registration_with_email_form.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
