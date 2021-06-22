@@ -26,6 +26,13 @@ const kFontStyleBlack = TextStyle(
   letterSpacing: 2,
   fontWeight: FontWeight.w800,
 );
+const kFontStyleBlack15 = TextStyle(
+  fontFamily: 'Shadows',
+  fontSize: 15.0,
+  color: Colors.black87,
+  fontWeight: FontWeight.bold,
+  letterSpacing: 3.0,
+);
 
 const kFontStyleBlackSize20 = TextStyle(
   fontFamily: 'Shadows',
@@ -60,4 +67,12 @@ const kFontStyleRed = TextStyle(
   color: Colors.red,
   fontFamily: 'Shadows',
   letterSpacing: 2,
+);
+
+const kFontStyle0xFFF15124 = TextStyle(
+  fontFamily: 'Shadows',
+  fontSize: 15.0,
+  color: Color(0xFFF15124),
+  fontWeight: FontWeight.bold,
+  letterSpacing: 3.0,
 );

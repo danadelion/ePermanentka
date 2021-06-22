@@ -9,41 +9,18 @@ import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 final _checkboxRepository = CheckBoxRepository();
 late final EPermanentkaValueObject ePermanentkaValueObject;
 
-class OnlineTraining extends StatefulWidget {
+class OutsideTraining extends StatefulWidget {
   late CheckBoxValueObject checkboxValueObject;
 
-  OnlineTraining(this.checkboxValueObject);
+  OutsideTraining(this.checkboxValueObject);
 
   @override
-  _OnlineTrainingState createState() => _OnlineTrainingState();
+  _OutsideTrainingState createState() => _OutsideTrainingState();
 }
 
-class _OnlineTrainingState extends State<OnlineTraining> {
+class _OutsideTrainingState extends State<OutsideTraining> {
   DateTime selectedDate = DateTime.now();
   User? loggedInUser;
-
-  Future<void> _selectDate(
-      BuildContext context, CheckBoxValueObject checkboxValueObject) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2021),
-      lastDate: DateTime(2030),
-      helpText: 'vyber den',
-      cancelText: 'zpět',
-      confirmText: 'ok',
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-
-        checkboxValueObject.practiced = DateTime.now();
-        checkboxValueObject.broadcasted = selectedDate;
-
-        _checkboxRepository.save(checkboxValueObject);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +35,12 @@ class _OnlineTrainingState extends State<OnlineTraining> {
 
     return Row(
       children: [
+        Icon(
+          Icons.nature_people_outlined,
+          color: Colors.black87,
+        ),
         Container(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(width: 3.0, color: Color(0xFFF15124)),
@@ -73,28 +54,6 @@ class _OnlineTrainingState extends State<OnlineTraining> {
                 : 'neodcvičeno',
             style: kFontStyleRed,
             textAlign: TextAlign.start,
-          ),
-        ),
-        SizedBox(
-          width: 10.0,
-        ),
-        Expanded(
-          child: ElevatedButton(
-            child: Text(
-              isChecked == true
-                  ? 'vysíláno online ${DateFormat('d.M.y').format(selectedDate)}'
-                  : 'neodcvičeno',
-              style: kFontStyleRed,
-              textAlign: TextAlign.start,
-            ),
-            onPressed: () {
-              setState(() {
-                _selectDate(context, checkboxValueObject);
-              });
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.white),
-            ),
           ),
         ),
       ],

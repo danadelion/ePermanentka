@@ -3,6 +3,7 @@ import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 import 'package:e_permanentka/value_objects/season_ticket_screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:e_permanentka/constants.dart';
 
 class TextButtonEPermanentka extends StatefulWidget {
   EPermanentkaValueObject ePermanentkaValueObject;
@@ -17,9 +18,9 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
   @override
   Widget build(BuildContext context) {
     DateTime date = widget.ePermanentkaValueObject.created;
-    var createdDate = DateTime(date.year, date.month + 5, date.day);
+    var createdDate = DateTime(date.year, date.month, date.day);
     String exparing =
-        '${createdDate.day}.${createdDate.month}.${createdDate.year}';
+        '${createdDate.day}.${createdDate.month + 5}.${createdDate.year}';
 
     int numberOfReceivedCheckboxes = 12 - 1;
 
@@ -32,7 +33,7 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
               backgroundColor: MaterialStateProperty.all(Colors.white),
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+                  borderRadius: BorderRadius.circular(20.0),
                   // side: BorderSide(color: Colors.red),
                 ),
               ),
@@ -44,13 +45,7 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
             },
             child: Text(
               ' 12 vstupů ',
-              style: TextStyle(
-                fontFamily: 'Shadows',
-                fontSize: 15.0,
-                color: Color(0xFFF15124),
-                fontWeight: FontWeight.bold,
-                letterSpacing: 3.0,
-              ),
+              style: kFontStyle0xFFF15124,
             ),
           ),
           SizedBox(
@@ -61,26 +56,14 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
             children: [
               Text(
                 'vyprší $exparing',
-                style: TextStyle(
-                  fontFamily: 'Shadows',
-                  fontSize: 15.0,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 3.0,
-                ),
+                style: kFontStyleBlack15,
               ),
               Container(
                 // decoration: BoxDecoration(
                 //     border: Border.all(width: 1.0, color: Colors.black)),
                 child: Text(
                   'zbývá $numberOfReceivedCheckboxes vstupů',
-                  style: TextStyle(
-                    fontFamily: 'Shadows',
-                    fontSize: 15.0,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 3.0,
-                  ),
+                  style: kFontStyleBlack15,
                 ),
               ),
             ],

@@ -163,9 +163,10 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
                     height: 20.0,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 20.0,
+                        width: 10.0,
                       ),
                       receivedPermanentky.isEmpty
                           ? Text(
