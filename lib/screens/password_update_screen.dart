@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_permanentka/widgets/rounded_button.dart';
 import '../constants.dart';
@@ -12,14 +11,11 @@ class PasswordUpdateScreen extends StatefulWidget {
 class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
   @override
   Widget build(BuildContext context) {
-    late String name;
     late String password;
     late String password1;
     late String password2;
     late String email;
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final _auth = FirebaseAuth.instance;
-    User? loggedInUser = _auth.currentUser;
 
     return Material(
       child: Padding(

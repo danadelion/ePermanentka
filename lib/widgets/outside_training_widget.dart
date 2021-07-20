@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../value_objects/checkbox_value_object.dart';
-import '../repositories/checkbox_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 
-final _checkboxRepository = CheckBoxRepository();
 late final EPermanentkaValueObject ePermanentkaValueObject;
 
 class OutsideTraining extends StatefulWidget {
-  late CheckBoxValueObject checkboxValueObject;
+  late CheckboxValueObject checkboxValueObject;
 
   OutsideTraining(this.checkboxValueObject);
 
@@ -24,14 +22,14 @@ class _OutsideTrainingState extends State<OutsideTraining> {
 
   @override
   Widget build(BuildContext context) {
-    CheckBoxValueObject checkboxValueObject = widget.checkboxValueObject;
+    CheckboxValueObject checkboxValueObject = widget.checkboxValueObject;
     selectedDate = (checkboxValueObject.broadcasted != null
         ? checkboxValueObject.broadcasted
         : DateTime.now())!;
     DateTime date = (checkboxValueObject.practiced != null
         ? checkboxValueObject.practiced
         : DateTime.now())!;
-    bool isChecked = checkboxValueObject.checkbox;
+    // bool isChecked = checkboxValueObject.checkbox;
 
     return Row(
       children: [
@@ -49,9 +47,10 @@ class _OutsideTrainingState extends State<OutsideTraining> {
             ),
           ),
           child: Text(
-            isChecked == true
-                ? 'odcvičeno ${DateFormat('d.M.y').format(date)}'
-                : 'neodcvičeno',
+            'odcvičeno ${DateFormat('d.M.y').format(date)}',
+            // isChecked == true
+            //     ? 'odcvičeno ${DateFormat('d.M.y').format(date)}'
+            //     : 'neodcvičeno',
             style: kFontStyleRed,
             textAlign: TextAlign.start,
           ),

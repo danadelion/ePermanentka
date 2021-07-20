@@ -22,7 +22,8 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
     String exparing =
         '${createdDate.day}.${createdDate.month + 5}.${createdDate.year}';
 
-    int numberOfReceivedCheckboxes = 12 - 1;
+    DateTime isExpired = DateTime(date.year, date.month + 5, date.day);
+    DateTime today = DateTime.now();
 
     return Card(
       child: Row(
@@ -39,14 +40,23 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
               ),
             ),
             onPressed: () {
-              Navigator.pushNamed(context, SeasonTicketScreen.id,
-                  arguments: SeasonTicketScreenArguments(
-                      widget.ePermanentkaValueObject));
+              isExpired.isAfter(today)
+                  ? Navigator.pushNamed(context, SeasonTicketScreen.id,
+                      arguments: SeasonTicketScreenArguments(
+                          widget.ePermanentkaValueObject))
+                  : Dialog(
+                      child: Text('Permanentka vypršela'),
+                    );
             },
-            child: Text(
-              ' 12 vstupů ',
-              style: kFontStyle0xFFF15124,
-            ),
+            child: isExpired.isAfter(today)
+                ? Text(
+                    ' 12 vstupů ',
+                    style: kFontStyle0xFFF15124,
+                  )
+                : Text(
+                    ' nevyužito ${12 - widget.ePermanentkaValueObject.countCheckboxes()} vstupů ',
+                    style: kFontStyleGrey,
+                  ),
           ),
           SizedBox(
             width: 24.0,
@@ -54,15 +64,20 @@ class _TextButtonEPermanentkaState extends State<TextButtonEPermanentka> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                'vyprší $exparing',
-                style: kFontStyleBlack15,
-              ),
+              isExpired.isAfter(today)
+                  ? Text(
+                      'vyprší $exparing',
+                      style: kFontStyleBlack15,
+                    )
+                  : Text(
+                      'vypršela $exparing',
+                      style: kFontStyleBlack15,
+                    ),
               Container(
                 // decoration: BoxDecoration(
                 //     border: Border.all(width: 1.0, color: Colors.black)),
                 child: Text(
-                  'zbývá $numberOfReceivedCheckboxes vstupů',
+                  'zbývá ${12 - widget.ePermanentkaValueObject.countCheckboxes()} vstupů',
                   style: kFontStyleBlack15,
                 ),
               ),

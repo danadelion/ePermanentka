@@ -1,21 +1,19 @@
 import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 import 'package:e_permanentka/enum/training_type_enum.dart';
 
-class CheckBoxValueObject {
+class CheckboxValueObject {
   late String id;
   late String userId;
   late DateTime? broadcasted;
   late bool checkbox;
   late DateTime? practiced;
-  late int index;
   late EPermanentkaValueObject ePermanentkaValueObject;
   late TrainingType? trainingType;
 
-  CheckBoxValueObject(EPermanentkaValueObject ePermanentkaValueObject, Map data,
+  CheckboxValueObject(EPermanentkaValueObject ePermanentkaValueObject, Map data,
       {id = ''}) {
     this.id = id;
-    this.userId = data['user'];
-    this.index = data['index'];
+    this.userId = ePermanentkaValueObject.userId;
     this.broadcasted = data.containsKey('broadcasted')
         ? DateTime.parse(data['broadcasted'])
         : DateTime.now();
@@ -32,7 +30,6 @@ class CheckBoxValueObject {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      'index': index,
       'user': userId,
       'checkbox': checkbox,
       'practiced': practiced,

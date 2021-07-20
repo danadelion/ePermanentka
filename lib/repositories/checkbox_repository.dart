@@ -1,11 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
+import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 
 class CheckBoxRepository {
   final _firestore = FirebaseFirestore.instance;
 
-  Future<CheckBoxValueObject> save(
-      CheckBoxValueObject checkBoxValueObject) async {
+  Future<List<CheckboxValueObject>> getAllForEPermanentka(
+      EPermanentkaValueObject ePermanentkaValueObject) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('users')
+        .doc(ePermanentkaValueObject.userId)
+        .collection('ePermanentka')
+        .doc(ePermanentkaValueObject.id)
+        .collection('checkBox')
+        .get();
+
+    List<CheckboxValueObject> listOfCheckboxes = [];
+
+    querySnapshot.docs.forEach((QueryDocumentSnapshot doc) {
+      listOfCheckboxes.add(CheckboxValueObject(
+          ePermanentkaValueObject, doc.data()!,
+          id: doc.id));
+    });
+
+    return listOfCheckboxes;
+  }
+
+  Future<CheckboxValueObject> save(
+      CheckboxValueObject checkBoxValueObject) async {
     if (checkBoxValueObject.id.isEmpty) {
       await this.create(checkBoxValueObject);
     } else {
@@ -15,8 +37,8 @@ class CheckBoxRepository {
     return checkBoxValueObject;
   }
 
-  Future<CheckBoxValueObject> create(
-      CheckBoxValueObject checkBoxValueObject) async {
+  Future<CheckboxValueObject> create(
+      CheckboxValueObject checkBoxValueObject) async {
     DocumentReference doc = await _firestore
         .collection('users')
         .doc(checkBoxValueObject.userId)
@@ -30,8 +52,8 @@ class CheckBoxRepository {
     return checkBoxValueObject;
   }
 
-  Future<CheckBoxValueObject> update(
-      CheckBoxValueObject checkBoxValueObject) async {
+  Future<CheckboxValueObject> update(
+      CheckboxValueObject checkBoxValueObject) async {
     await _firestore
         .collection('users')
         .doc(checkBoxValueObject.userId)
@@ -44,8 +66,8 @@ class CheckBoxRepository {
     return checkBoxValueObject;
   }
 
-  List<CheckBoxValueObject> getAllForUser(String userId) {
-    List<CheckBoxValueObject> checkboxValueObjects = [];
+  List<CheckboxValueObject> getAllForUser(String userId) {
+    List<CheckboxValueObject> checkboxValueObjects = [];
 
     return checkboxValueObjects;
   }

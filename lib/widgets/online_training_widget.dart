@@ -10,7 +10,7 @@ final _checkboxRepository = CheckBoxRepository();
 late final EPermanentkaValueObject ePermanentkaValueObject;
 
 class OnlineTraining extends StatefulWidget {
-  late CheckBoxValueObject checkboxValueObject;
+  late CheckboxValueObject checkboxValueObject;
 
   OnlineTraining(this.checkboxValueObject);
 
@@ -23,7 +23,7 @@ class _OnlineTrainingState extends State<OnlineTraining> {
   User? loggedInUser;
 
   Future<void> _selectDate(
-      BuildContext context, CheckBoxValueObject checkboxValueObject) async {
+      BuildContext context, CheckboxValueObject checkboxValueObject) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -47,14 +47,13 @@ class _OnlineTrainingState extends State<OnlineTraining> {
 
   @override
   Widget build(BuildContext context) {
-    CheckBoxValueObject checkboxValueObject = widget.checkboxValueObject;
+    CheckboxValueObject checkboxValueObject = widget.checkboxValueObject;
     selectedDate = (checkboxValueObject.broadcasted != null
         ? checkboxValueObject.broadcasted
         : DateTime.now())!;
     DateTime date = (checkboxValueObject.practiced != null
         ? checkboxValueObject.practiced
         : DateTime.now())!;
-    bool isChecked = checkboxValueObject.checkbox;
 
     return Column(
       children: [
@@ -68,15 +67,13 @@ class _OnlineTrainingState extends State<OnlineTraining> {
               padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(width: 3.0, color: Color(0xFFF15124)),
+                border: Border.all(width: 3.0, color: kColorFitM),
                 borderRadius: BorderRadius.all(
                   Radius.circular(8.0),
                 ),
               ),
               child: Text(
-                isChecked == true
-                    ? 'odcvičeno ${DateFormat('d.M.y').format(date)}'
-                    : 'neodcvičeno',
+                'odcvičeno ${DateFormat('d.M.y').format(date)}',
                 style: kFontStyleRed,
                 textAlign: TextAlign.start,
               ),
@@ -86,12 +83,21 @@ class _OnlineTrainingState extends State<OnlineTraining> {
             ),
             Expanded(
               child: ElevatedButton(
-                child: Text(
-                  isChecked == true
-                      ? 'vysíláno ${DateFormat('d.M.y').format(selectedDate)}'
-                      : 'neodcvičeno',
-                  style: kFontStyleRed,
-                  textAlign: TextAlign.start,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_drop_down_circle_outlined,
+                      color: kColorFitM,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      'vysíláno ${DateFormat('d.M.y').format(selectedDate)}',
+                      style: kFontStyleRed,
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
                 ),
                 onPressed: () {
                   setState(() {

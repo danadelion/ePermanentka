@@ -7,6 +7,10 @@ class UserRepository {
   var receivedUser;
   final _auth = FirebaseAuth.instance;
 
+  User? getFirebaseUser() {
+    return _auth.currentUser;
+  }
+
   Future<UserValueObject> getCurrentUser() async {
     User? loggedInUser = _auth.currentUser;
 

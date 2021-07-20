@@ -72,7 +72,17 @@ const kFontStyleRed = TextStyle(
 const kFontStyle0xFFF15124 = TextStyle(
   fontFamily: 'Shadows',
   fontSize: 15.0,
-  color: Color(0xFFF15124),
+  color: kColorFitM,
   fontWeight: FontWeight.bold,
   letterSpacing: 3.0,
 );
+
+const kFontStyleGrey = TextStyle(
+  fontFamily: 'Shadows',
+  fontSize: 15.0,
+  color: Colors.blueGrey,
+  fontWeight: FontWeight.bold,
+  letterSpacing: 3.0,
+);
+
+const kColorFitM = Color(0xFFF15124);

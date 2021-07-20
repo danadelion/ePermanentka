@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_permanentka/constants.dart';
 import 'package:e_permanentka/providers/email_sign_in.dart';
+import 'package:e_permanentka/repositories/ePermanentka_repository.dart';
 import 'package:e_permanentka/screens/password_update_screen.dart';
 import 'package:e_permanentka/screens/payment_screen.dart';
 import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/google_sign_in.dart';
 
-final _firestore = FirebaseFirestore.instance;
-
 class ListOfSeasonTicketScreen extends StatefulWidget {
   static const String id = 'list_of_season_ticket_screen';
   @override
@@ -21,20 +19,26 @@ class ListOfSeasonTicketScreen extends StatefulWidget {
 }
 
 class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
-  var receivedPermanentky = [];
+  final EPermanentkaRepository ePermanentkaRepository =
+      EPermanentkaRepository();
+  var listOfPermanentka = [];
   bool isLoading = true;
   User? loggedInUser;
   final _auth = FirebaseAuth.instance;
 
-  Future<void> getCurrentUser() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-      }
-    } catch (e) {
-      print(e);
-    }
+  @override
+  void initState() {
+    super.initState();
+    ePermanentkaRepository.getAllForCurrentUser().then(
+      (List<EPermanentkaValueObject> listOfPermanentka) {
+        setState(
+          () {
+            this.listOfPermanentka = listOfPermanentka;
+            isLoading = false;
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -42,30 +46,8 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
     User? loggedInUser = _auth.currentUser;
 
     if (isLoading) {
-      getCurrentUser().then((value) {
-        _firestore
-            .collection('users')
-            .doc(loggedInUser!.uid)
-            .collection('ePermanentka')
-            .get()
-            .then(
-          (QuerySnapshot querySnapshot) {
-            setState(
-              () {
-                receivedPermanentky = querySnapshot.docs;
-                isLoading = false;
-              },
-            );
-          },
-        ).onError((error, stackTrace) {
-          print(error.toString());
-        });
-      });
       return buildLoading();
     }
-
-    // var receivedCheckboxes = [];
-    // int numberOfReceivedCheckboxes = receivedCheckboxes.length;
 
     return Scaffold(
       drawer: Drawer(
@@ -86,10 +68,6 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
               ),
               onTap: () {
                 Navigator.pushNamed(context, PasswordUpdateScreen.id);
-                // FirebaseFirestore.instance
-                //     .collection('users')
-                //     .doc(loggedInUser!.uid)
-                //     .get(name);
               },
             ),
             ListTile(
@@ -168,19 +146,20 @@ class _ListOfSeasonTicketScreenState extends State<ListOfSeasonTicketScreen> {
                       SizedBox(
                         width: 10.0,
                       ),
-                      receivedPermanentky.isEmpty
-                          ? Text(
-                              'nemáte žádnou permanentku!!',
-                              textAlign: TextAlign.center,
-                              style: kFontStyleBlackSize20,
-                            )
-                          : Column(
-                              children: receivedPermanentky.map((doc) {
-                                return TextButtonEPermanentka(
-                                    EPermanentkaValueObject(doc!.data()!,
-                                        id: doc.id));
-                              }).toList(),
-                            ),
+                      if (listOfPermanentka.isEmpty)
+                        Text(
+                          'nemáte žádnou permanentku!!',
+                          textAlign: TextAlign.center,
+                          style: kFontStyleBlackSize20,
+                        )
+                      else
+                        Column(
+                          children:
+                              listOfPermanentka.map((ePermanentkaValueObject) {
+                            return TextButtonEPermanentka(
+                                ePermanentkaValueObject);
+                          }).toList(),
+                        ),
                     ],
                   ),
                 ],

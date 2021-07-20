@@ -1,11 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_permanentka/repositories/checkbox_repository.dart';
+import 'package:e_permanentka/repositories/user_repository.dart';
+import 'package:e_permanentka/value_objects/checkbox_value_object.dart';
 import 'package:e_permanentka/value_objects/ePermanentka_value_object.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class EPermanentkaRepository {
   final _firestore = FirebaseFirestore.instance;
+  final CheckBoxRepository checkBoxRepository = CheckBoxRepository();
+  final UserRepository userRepository = UserRepository();
   var receivedEPermanentka = [];
   User? loggedInUser;
+
+  Future<List<EPermanentkaValueObject>> getAllForCurrentUser() async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('users')
+        .doc(userRepository.getFirebaseUser()!.uid)
+        .collection('ePermanentka')
+        .get();
+
+    List<EPermanentkaValueObject> listOfEPermanentka = [];
+
+    for (var doc in querySnapshot.docs) {
+      EPermanentkaValueObject ePermanentkaValueObject =
+          EPermanentkaValueObject(doc.data()!, id: doc.id);
+      List<CheckboxValueObject> listOfCheckboxes = await checkBoxRepository
+          .getAllForEPermanentka(ePermanentkaValueObject);
+
+      ePermanentkaValueObject.listOfCheckboxes = listOfCheckboxes;
+
+      listOfEPermanentka.add(ePermanentkaValueObject);
+    }
+
+    return listOfEPermanentka;
+  }
 
   EPermanentkaValueObject getEPermanentkaData(
       int index, List receivedPermanentka) {
