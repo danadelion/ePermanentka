@@ -85,7 +85,7 @@ class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'zadej heslo';
+                        return 'zadej nové heslo';
                       }
                       return null;
                     },
