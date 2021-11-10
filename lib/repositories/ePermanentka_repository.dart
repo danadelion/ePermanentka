@@ -24,6 +24,7 @@ class EPermanentkaRepository {
     for (var doc in querySnapshot.docs) {
       EPermanentkaValueObject ePermanentkaValueObject =
           EPermanentkaValueObject(doc.data()!, id: doc.id);
+          
       List<CheckboxValueObject> listOfCheckboxes = await checkBoxRepository
           .getAllForEPermanentka(ePermanentkaValueObject);
 
